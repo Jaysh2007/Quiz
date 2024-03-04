@@ -43,6 +43,7 @@ const quesJSON = [
 
 let score = 0;
 let currentQuestion = 0;
+const totalScore = quesJSON.length;
 
 //Accessing all the elements:
 const questionEl = document.getElementById("question");
@@ -51,7 +52,7 @@ const scoreEl = document.getElementById("score");
 showQuestion();
 function showQuestion() {
   // Destructuring the object
-    const { correctAnswer, options, question } = quesJSON[currentQuestion];
+  const { correctAnswer, options, question } = quesJSON[currentQuestion];
 
   //Setting question text content
   questionEl.textContent = question;
@@ -66,30 +67,36 @@ function showQuestion() {
 
     // Event handling on the button:
     btn.addEventListener("click", () => {
-      if (opt === correctAnswer) {
-        score++;
-      } else {
-        score = score - 0.25;
-      }
-       console.log(score);
-       scoreEl.textContent = `Score: ${score}`;
-       nextQuestion();
+      btn.style.backgroundColor = "grey";
+      const submit = document.getElementById("submit");
+      submit.addEventListener("click", () => {
+          if (opt === correctAnswer) {
+            btn.style.backgroundColor = "green";
+            score++;
+            
+          } else {
+            btn.style.backgroundColor = "red";
+            score = score - 0.25;
+          }
+        scoreEl.textContent = `Score: ${score}/${totalScore}`;
+        nextQuestion();
+      });
     });
   });
 }
 
-const next = document.getElementById('next');
-next.addEventListener('click', function nextQuestion(){
+const next = document.getElementById("next");
+next.addEventListener("click", function nextQuestion() {
   currentQuestion++;
   optionEl.textContent = "";
-  if(currentQuestion>=quesJSON.length){
+  scoreEl.textContent = `Score: ${score}/${totalScore}`;
+  if (currentQuestion >= quesJSON.length) {
     questionEl.textContent = "Quiz Completed!!";
-    
-  }else{
+    next.remove();
+  } else {
     showQuestion();
   }
-})
-
+});
 
 //Shuffling the Options
 function shuffleOptions(options) {
